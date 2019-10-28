@@ -10,6 +10,27 @@ namespace WpfApp.ViewModel
 {
     public class WeatherVM : INotifyPropertyChanged
     {
+
+        public WeatherVM()
+        {
+            if (DesignerProperties.GetIsInDesignMode(new System.Windows.DependencyObject()))
+            {
+                SelectedCity = new City { LocalizedName = "London" };
+                Weather = new Weather
+                {
+                    WeatherText = "Partly cloudy",
+                    Temperature = new Temperature
+                    {
+                        Metric = new Metric
+                        {
+                            Value = 21
+                        }
+                    }
+                };
+            }
+        }
+
+        #region fullproperties
         private string query;
         public string Query
         {
@@ -43,12 +64,13 @@ namespace WpfApp.ViewModel
             }
         }
 
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        #endregion
+
     }
 }
