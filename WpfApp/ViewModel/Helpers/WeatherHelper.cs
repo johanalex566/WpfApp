@@ -10,17 +10,18 @@ using WpfApp.Model;
 
 namespace WpfApp.ViewModel.Helpers
 {
-    public class WeatherHelper
+    public  class WeatherHelper
     {
         public const string tokenAPI = "lO8gLTfks65nDSjCGMNir2tuEV3zwQKp&q";
         public const string BASE_URL = "http://dataservice.accuweather.com/";
-        public const string AUTOCOMPLETE_ENDPOINT = "locations/v1/cities/autocomplete?apikey={0}={0}";
+        public const string AUTOCOMPLETE_ENDPOINT = "locations/v1/cities/autocomplete?apikey={0}={1}";
         public const string WEATHER_CONDITION_ENDPOINT = "currentconditions/v1/{0}?apikey={1}";
 
         public static async Task<List<City>> GetCities(string query)
         {
             List<City> cities = new List<City>();
             string url = BASE_URL + string.Format(AUTOCOMPLETE_ENDPOINT, tokenAPI, query);
+         
             try
             {
                 using (HttpClient client = new HttpClient())

@@ -5,33 +5,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WpfApp.Model;
+using WpfApp.ViewModel.Commands;
+using WpfApp.ViewModel.Helpers;
 
 namespace WpfApp.ViewModel
 {
     public class WeatherVM : INotifyPropertyChanged
     {
-
-        public WeatherVM()
-        {
-            if (DesignerProperties.GetIsInDesignMode(new System.Windows.DependencyObject()))
-            {
-                SelectedCity = new City { LocalizedName = "London" };
-                Weather = new Weather
-                {
-                    WeatherText = "Partly cloudy",
-                    Temperature = new Temperature
-                    {
-                        Metric = new Metric
-                        {
-                            Value = 21
-                        }
-                    }
-                };
-            }
-        }
-
         #region fullproperties
         private string query;
+        private Weather weather;
+        private City selectedCity;
+        public SearchCommand SearchCommand { get; set; }
+
         public string Query
         {
             get { return query; }
@@ -42,7 +28,6 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private Weather weather;
         public Weather Weather
         {
             get { return weather; }
@@ -53,7 +38,6 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private City selectedCity;
         public City SelectedCity
         {
             get { return selectedCity; }
@@ -63,6 +47,30 @@ namespace WpfApp.ViewModel
                 OnPropertyChanged("SelectedCity");
             }
         }
+        #endregion full properties
+
+        public async void MakeQuery()
+        {
+            List<City> cities = await WeatherHelper.GetCities(Query);
+        }
+
+        public WeatherVM()
+        {
+
+            SelectedCity = new City { LocalizedName = "London" };
+            Weather = new Weather
+            {
+                WeatherText = "Partly cloudy",
+                Temperature = new Temperature
+                {
+                    Metric = new Metric
+                    {
+                        Value = 21
+                    }
+                }
+            };
+            SearchCommand = new SearchCommand(this);
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -70,7 +78,7 @@ namespace WpfApp.ViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        #endregion
+
 
     }
 }
