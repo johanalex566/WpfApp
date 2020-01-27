@@ -48,27 +48,6 @@ namespace WpfApp.ViewModel.Helpers
                         string json = await response.Content.ReadAsStringAsync();
 
                         cities = JsonConvert.DeserializeObject<List<City>>(json);
-
-                        stopWatch.Stop();
-
-                        // Set properties of containing telemetry item--for example:
-                        operation.Telemetry.ResponseCode = response.StatusCode.ToString();
-
-                        // Optional: explicitly send telemetry item:
-                        telemetry.StopOperation(operation);
-
-                        TimeSpan ts = stopWatch.Elapsed;
-
-                        MetricTelemetry metric = new MetricTelemetry("GetCities", ts.Milliseconds);
-
-                        metric.Properties.Add("Code", "wpfApp");
-
-                        if (!string.IsNullOrEmpty(json))
-                        metric.Properties.Add("Status", "True");
-                        else
-                            metric.Properties.Add("Status", "False");
-
-                        telemetry.TrackMetric(metric);
                     }
                 }
             }
