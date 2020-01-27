@@ -20,6 +20,32 @@ namespace WpfApp.ViewModel
         public SearchCommand SearchCommand { get; set; }
         public ObservableCollection<City> Cities { get; set; }
 
+        public WeatherVM()
+        {
+
+            SelectedCity = new City { LocalizedName = "London" };
+            Weather = new Weather
+            {
+                WeatherText = "Partly cloudy",
+                Temperature = new Temperature
+                {
+                    Metric = new Metric
+                    {
+                        Value = 21
+                    }
+                }
+            };
+            SearchCommand = new SearchCommand(this);
+            Cities = new ObservableCollection<City>();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public string Query
         {
             get { return query; }
@@ -61,31 +87,7 @@ namespace WpfApp.ViewModel
             }
         }
 
-        public WeatherVM()
-        {
 
-            SelectedCity = new City { LocalizedName = "London" };
-            Weather = new Weather
-            {
-                WeatherText = "Partly cloudy",
-                Temperature = new Temperature
-                {
-                    Metric = new Metric
-                    {
-                        Value = 21
-                    }
-                }
-            };
-            SearchCommand = new SearchCommand(this);
-            Cities = new ObservableCollection<City>();
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
 
     }
