@@ -19,7 +19,7 @@ namespace WpfApp.ViewModel
         private City selectedCity;
         public SearchCommand SearchCommand { get; set; }
         public ObservableCollection<City> Cities { get; set; }
-
+        public event PropertyChangedEventHandler PropertyChanged;
         public WeatherVM()
         {
 
@@ -38,14 +38,10 @@ namespace WpfApp.ViewModel
             SearchCommand = new SearchCommand(this);
             Cities = new ObservableCollection<City>();
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
         public string Query
         {
             get { return query; }
@@ -55,7 +51,6 @@ namespace WpfApp.ViewModel
                 OnPropertyChanged("Query");
             }
         }
-
         public Weather Weather
         {
             get { return weather; }
@@ -65,7 +60,6 @@ namespace WpfApp.ViewModel
                 OnPropertyChanged("Weather");
             }
         }
-
         public City SelectedCity
         {
             get { return selectedCity; }
@@ -73,10 +67,19 @@ namespace WpfApp.ViewModel
             {
                 selectedCity = value;
                 OnPropertyChanged("SelectedCity");
+                if (selectedCity != null)
+                {
+                    if (selectedCity.Key != null)
+                    {
+                        GetWeatherConditions();
+                    }
+                }
             }
         }
         #endregion full properties
 
+
+        #region Methods
         public async void MakeQuery()
         {
             List<City> cities = await WeatherHelper.GetCities(Query);
@@ -86,9 +89,11 @@ namespace WpfApp.ViewModel
                 Cities.Add(city);
             }
         }
-
-
-
-
+        private async void GetWeatherConditions()
+        {
+            Query = string.Empty;
+            Weather = await WeatherHelper.GetWeather(SelectedCity.Key);
+        }
+        #endregion
     }
 }
